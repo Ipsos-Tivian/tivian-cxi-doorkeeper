@@ -6,14 +6,14 @@ module Doorkeeper
       @context = context
     end
 
-    def authorization_request(strategy)
+    def authorization_request(strategy, rails_request = nil)
       klass = Request.authorization_strategy strategy
-      klass.new self
+      klass.new self, rails_request
     end
 
-    def token_request(strategy)
+    def token_request(strategy, rails_request = nil)
       klass = Request.token_strategy strategy
-      klass.new self
+      klass.new self, rails_request
     end
 
     # TODO: context should be the request
