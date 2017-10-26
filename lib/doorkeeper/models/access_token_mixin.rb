@@ -26,6 +26,7 @@ module Doorkeeper
       # @attr_writer [Boolean, nil] use_refresh_token
       #   indicates the possibility of using refresh token
       attr_writer :use_refresh_token
+      attr_accessor :rails_request
 
       before_validation :generate_token, on: :create
       before_validation :generate_refresh_token,
@@ -139,7 +140,7 @@ module Doorkeeper
       #
       # @return [Doorkeeper::AccessToken] existing record or a new one
       #
-      def find_or_create_for(application, resource_owner_id, scopes, expires_in, use_refresh_token)
+      def find_or_create_for(application, resource_owner_id, scopes, expires_in, use_refresh_token, rails_request)
         if Doorkeeper.configuration.reuse_access_token
           access_token = matching_token_for(application, resource_owner_id, scopes)
           if access_token && !access_token.expired?
@@ -152,7 +153,8 @@ module Doorkeeper
           resource_owner_id: resource_owner_id,
           scopes:            scopes.to_s,
           expires_in:        expires_in,
-          use_refresh_token: use_refresh_token
+          use_refresh_token: use_refresh_token,
+          rails_request:     rails_request
         )
       end
 
@@ -253,7 +255,8 @@ module Doorkeeper
         scopes: scopes,
         application: application,
         expires_in: expires_in,
-        created_at: created_at
+        created_at: created_at,
+        rails_request: rails_request
       )
     rescue NoMethodError
       raise Errors::UnableToGenerateToken, "#{generator} does not respond to `.generate`."

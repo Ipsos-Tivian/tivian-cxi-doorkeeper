@@ -10,14 +10,15 @@ module Doorkeeper
       validate :scope,        error: :invalid_scope
 
       attr_accessor :access_token, :client, :credentials, :refresh_token,
-                    :server
+                    :server, :rails_request
 
-      def initialize(server, refresh_token, credentials, parameters = {})
+      def initialize(server, refresh_token, credentials, parameters = {}, rails_request = nil)
         @server          = server
         @refresh_token   = refresh_token
         @credentials     = credentials
         @original_scopes = parameters[:scope] || parameters[:scopes]
         @refresh_token_parameter = parameters[:refresh_token]
+        @rails_request = rails_request
 
         if credentials
           @client = Application.by_uid_and_secret credentials.uid,
@@ -55,7 +56,8 @@ module Doorkeeper
           resource_owner_id: refresh_token.resource_owner_id,
           scopes: scopes.to_s,
           expires_in: access_token_expires_in,
-          use_refresh_token: true
+          use_refresh_token: true,
+          rails_request: rails_request
         }.tap do |attributes|
           if refresh_token_revoked_on_use?
             attributes[:previous_refresh_token] = refresh_token.refresh_token

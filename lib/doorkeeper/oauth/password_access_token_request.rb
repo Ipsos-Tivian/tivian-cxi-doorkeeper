@@ -8,20 +8,21 @@ module Doorkeeper
       validate :scopes,         error: :invalid_scope
 
       attr_accessor :server, :client, :resource_owner, :parameters,
-                    :access_token
+                    :access_token, :rails_request
 
-      def initialize(server, client, resource_owner, parameters = {})
+      def initialize(server, client, resource_owner, parameters = {}, rails_request = nil)
         @server          = server
         @resource_owner  = resource_owner
         @client          = client
         @parameters      = parameters
         @original_scopes = parameters[:scope]
+        @rails_request = rails_request
       end
 
       private
 
       def before_successful_response
-        find_or_create_access_token(client, resource_owner.id, scopes, server)
+        find_or_create_access_token(client, resource_owner.id, scopes, server, rails_request)
       end
 
       def validate_scopes
