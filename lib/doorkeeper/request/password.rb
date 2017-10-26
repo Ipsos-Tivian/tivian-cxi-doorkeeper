@@ -10,7 +10,8 @@ module Doorkeeper
           Doorkeeper.configuration,
           client,
           resource_owner,
-          parameters
+          parameters,
+          rails_request
         )
       end
 
