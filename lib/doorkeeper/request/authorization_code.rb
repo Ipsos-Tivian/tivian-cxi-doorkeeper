@@ -10,7 +10,8 @@ module Doorkeeper
           Doorkeeper.configuration,
           grant,
           client,
-          parameters
+          parameters,
+          rails_request
         )
       end
 
