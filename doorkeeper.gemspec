@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- spec/*`.split("\n")
   s.require_paths = ["lib"]
 
-  s.add_dependency "railties", ">= 4.2"
+  s.add_dependency "railties", ">= 5.0"
   s.required_ruby_version = ">= 2.1"
 
   s.add_development_dependency "capybara"
