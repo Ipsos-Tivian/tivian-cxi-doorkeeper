@@ -10,15 +10,9 @@ module Doorkeeper
     include ActiveModel::MassAssignmentSecurity if defined?(::ProtectedAttributes)
 
     included do
-      belongs_to_options = {
-        class_name: 'Doorkeeper::Application',
-        inverse_of: :access_tokens
-      }
-      if defined?(ActiveRecord::Base) && ActiveRecord::VERSION::MAJOR >= 5
-        belongs_to_options[:optional] = true
-      end
-
-      belongs_to :application, belongs_to_options
+      belongs_to :application, class_name: 'Doorkeeper::Application',
+                               inverse_of: :access_tokens,
+                               optional: true
 
       validates :token, presence: true, uniqueness: true
       validates :refresh_token, uniqueness: true, if: :use_refresh_token?
